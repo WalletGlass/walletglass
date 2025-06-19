@@ -1,0 +1,10 @@
+# Ignore Python virtual environments
+.venv/
+
+# Ignore VS Code/Cursor-specific files
+.vscode/
+__pycache__/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
