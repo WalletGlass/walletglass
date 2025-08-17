@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WalletGlass — Because vibes aren’t a trading strategy.</title>
+  <style>
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+           background:#0B0F14; color:#E6F0FF; display:flex; min-height:100vh; }
+    .wrap { margin:auto; text-align:center; padding:24px; max-width:720px; }
+    h1 { font-size:2rem; margin:0 0 12px; }
+    p  { opacity:.85; margin:0 0 24px; line-height:1.6; }
+    .btn { display:inline-block; padding:14px 22px; border-radius:12px; text-decoration:none;
+           background:#4DB6FF; color:#001018; font-weight:600; }
+    .sub { font-size:.9rem; opacity:.7; margin-top:16px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <img src="logo.png" alt="WalletGlass" style="height:56px; margin-bottom:16px;" onerror="this.style.display='none'">
+    <h1>Are you actually up or down?</h1>
+    <p>WalletGlass gives you real ROI by comparing total USD funded vs current wallet value.
+       No dopamine. Just receipts.</p>
+    <a class="btn" href="#" id="openApp">Open the App</a>
+    <div class="sub">Coming soon: token breakdowns & pro insights.</div>
+  </main>
+  <script>
+    // When the app is live, change this to: https://app.walletglass.io
+    document.getElementById('openApp').href = '#';
+  </script>
+</body>
+</html>
