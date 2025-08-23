@@ -1,0 +1,18 @@
+/* Minimal WalletGlass style overrides */
+:root {
+    --wg-card-radius: 14px;
+  }
+  
+  div[data-testid="stMetric"] {
+    border-radius: var(--wg-card-radius);
+    padding: 1rem 0.75rem;
+    background: rgba(255,255,255,0.06);      /* stronger contrast */
+    border: 1px solid rgba(255,255,255,0.15); /* clearer outline */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);    /* subtle lift */
+  }
+  div[data-testid="stMetric"]:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.25);
+  }
+  
+  

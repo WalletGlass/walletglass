@@ -1,0 +1,27 @@
+{
+  "0xddf252ad": {
+    "name": "Transfer",
+    "inputs": [
+      {"type": "address", "name": "from", "indexed": true},
+      {"type": "address", "name": "to", "indexed": true},
+      {"type": "uint256", "name": "value", "indexed": false}
+    ]
+  },
+  "0x1c411e9a": {
+    "name": "Sync",
+    "inputs": [
+      {"type": "uint112", "name": "reserve0", "indexed": false},
+      {"type": "uint112", "name": "reserve1", "indexed": false}
+    ]
+  },
+  "0xbce38bd7": {
+    "name": "Swapped",
+    "inputs": [
+      {"type": "address", "name": "sender", "indexed": true},
+      {"type": "address", "name": "srcToken", "indexed": false},
+      {"type": "address", "name": "dstToken", "indexed": false},
+      {"type": "uint256", "name": "amount", "indexed": false},
+      {"type": "uint256", "name": "returnAmount", "indexed": false}
+    ]
+  }
+}
