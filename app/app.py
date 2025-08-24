@@ -3,32 +3,63 @@
 # Purpose: Single-page app that shows ROI = (Current - Funded) / Funded for a wallet.
 # Behavior: Address input (auto-run), validation, cached fetches, results cards, Pro-gated token tile, last-address persistence.
 
-import json
-import re
+import os, sys, pathlib, json, re
 from pathlib import Path
 from datetime import datetime, timedelta
 
+# Make sure project root is importable
+sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
+
 import streamlit as st
 from dotenv import load_dotenv
-# Load minimal CSS (kept safe and small)
-from pathlib import Path
 
-css_path = Path(__file__).with_name("theme.css")
-if css_path.exists():
-    st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
+# Real module imports (keep these!)
+from mvp.funding_v1 import get_funding
+from mvp.balances_moralis import get_portfolio
+from mvp.pnl import compute_pnl
 
-
-# --- Config & Theme ---
+# Page config FIRST
 st.set_page_config(
     page_title="WalletGlass — ROI, not vibes.",
     page_icon="💎",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
-# (Dark mode is a user preference in Streamlit; we’ll design for dark. Optionally add a theme in .streamlit/config.toml)
 
-# --- Load env keys (if your SDKs read from env) ---
-load_dotenv()
+from urllib.parse import urlencode
+
+def use_dev_mode() -> bool:
+    """Developer Mode toggle with URL persistence (query param)."""
+    qp = st.query_params
+    default = qp.get("dev", ["0"])[0] in ("1", "true", "True")
+    dev = st.sidebar.toggle("🛠️ Developer Mode", value=default, help="Show debug info & sanity panels")
+    # keep the URL in sync so refresh/bookmark preserves the setting
+    if dev and not default:
+        st.query_params.update({"dev": "1"})
+    if (not dev) and default:
+        st.query_params.update({"dev": "0"})
+    return dev
+
+DEV = use_dev_mode()
+
+if DEV:
+    st.caption("🛠️ Developer Mode is enabled.")
+    # Debug info (optional)
+    st.caption(f"CWD: {os.getcwd()}")
+    st.caption("Top sys.path entries:")
+    for p in sys.path[:5]:
+        st.caption(f"• {p}")
+    st.caption(f"mvp exists: {pathlib.Path(__file__).resolve().parents[1].joinpath('mvp').exists()}")
+
+# ... (CSS load, helpers, etc.)
+
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_funding(address: str) -> dict:
+    return get_funding(address)      # uses imported function
+
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_portfolio(address: str) -> dict:
+    return get_portfolio(address)    # uses imported function
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -38,38 +69,66 @@ DEMO_ADDR = "0xc0ffee254729296a45a3885639AC7E10F9d54979"
 ADDR_RE = re.compile(r"^0x[a-fA-F0-9]{40}$")
 
 # Free-tier throttle (one new address per 5 minutes)
-THROTTLE_MINUTES = 5
+THROTTLE_MINUTES = 60
 
-# TODO: replace these with real functions from your modules
-def get_funding(address: str) -> dict:
-    # from mvp.funding import get_funding
-    # return get_funding(address)
-    return {"funded_usd": 1234.56, "events": []}  # placeholder
+css_path = Path(__file__).with_name("theme.css")
+if css_path.exists():
+    st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
+def _fmt_err(e: Exception) -> str:
+    # (pretty error string)
+    return f"{type(e).__name__}: {getattr(e, 'args', [''])[0]}"
+if DEV:
+    with st.expander("🧪 Funding sanity panel", expanded=False):
+        st.caption("Quick visibility into imports, caching, and return shape.")
 
-def get_portfolio(address: str) -> dict:
-    # from mvp.balances import get_portfolio
-    # return get_portfolio(address)
-    return {"current_value_usd": 1412.34, "tokens": []}  # placeholder
+        # Show exactly what we’re importing
+        try:
+            import inspect, mvp.funding_v1 as funding_mod
+            st.write("**funding_v1 path:**", inspect.getsourcefile(funding_mod))
+            st.write("**has `get_funding`?**", hasattr(funding_mod, "get_funding"))
+        except Exception as e:
+            st.error("Import problem: " + _fmt_err(e))
 
-def compute_pnl(funded_usd: float, current_value_usd: float) -> dict:
-    # from mvp.pnl import compute_pnl
-    # return compute_pnl(funded_usd, current_value_usd)
-    net = current_value_usd - funded_usd
-    roi = (net / funded_usd * 100.0) if funded_usd > 0 else 0.0
-    return {
-        "funded_usd": round(funded_usd, 2),
-        "current_value_usd": round(current_value_usd, 2),
-        "net_pnl_usd": round(net, 2),
-        "roi_pct": round(roi, 2),
-    }
+        # Dry-run call (no cache) against the current address, but don't block the main pipeline
+        try:
+            test_addr = st.session_state.get("active_address", None) or DEMO_ADDR
+            if st.button("Run quick get_funding() test"):
+                out = get_funding(test_addr)  # direct call (bypasses cache)
+                st.success(f"get_funding() OK — funded_usd={out.get('funded_usd')}, events={len(out.get('events', []))}")
+                st.json({k: out[k] for k in ("funded_usd",) if k in out})
+                # Only preview a few events so UI stays snappy
+                ev = out.get("events", [])[:5]
+                if ev:
+                    st.write("First 5 events:")
+                    st.json(ev)
+                else:
+                    st.info("No events returned.")
+        except Exception as e:
+            st.error("get_funding() raised an error: " + _fmt_err(e))
+            st.exception(e)  # full traceback, helpful during dev
+
+if DEV:
+    with st.expander("🧪 Portfolio sanity panel", expanded=False):
+        if st.button("Run quick get_portfolio() test"):
+            out = get_portfolio(st.session_state.get("active_address", DEMO_ADDR))
+            st.success(f"current_value_usd={out.get('current_value_usd')}, tokens={len(out.get('tokens', []))}")
+            st.json({"current_value_usd": out.get("current_value_usd")})
+            st.write("Top tokens (up to 10):")
+            st.json(out.get("tokens", [])[:10])
+
+
+
+# --- Load env keys (if your SDKs read from env) ---
+load_dotenv()
 
 @st.cache_data(ttl=600, show_spinner=False)
 def cached_funding(address: str) -> dict:
-    return get_funding(address)
+    return get_funding(address)   # ← imported from mvp.funding_v1
 
 @st.cache_data(ttl=600, show_spinner=False)
 def cached_portfolio(address: str) -> dict:
-    return get_portfolio(address)
+    return get_portfolio(address) # ← imported from mvp.balances_moralis
+
 
 def save_last_address(addr: str):
     try:
@@ -86,6 +145,15 @@ def load_last_address() -> str | None:
 
 def format_usd(x: float) -> str:
     return f"${x:,.2f}"
+
+def signed_usd(x: float) -> str:
+    """Return +$1,234.56 or -$1,234.56."""
+    sign = "+" if x >= 0 else "-"
+    return f"{sign}${abs(x):,.2f}"
+
+def roi_delta_color(roi_pct: float) -> str:
+    """Return a Streamlit delta color: 'normal' (green up / red down) or 'off'."""
+    return "normal" if abs(roi_pct) >= 0.10 else "off"  # 0.10% = near-zero threshold
 
 # --- Header ---
 left, right = st.columns([1, 4])
@@ -139,12 +207,13 @@ if is_new_address:
 
 # --- Pipeline status ---
 with st.status("Running analysis…", expanded=False) as status:
-    status.update(label="1/3 Fetching funding…")
+    status.update(label="1/3 Fetching funding (Moralis + Etherscan checks)…")
     try:
-        funding = cached_funding(addr)
+        funding = cached_funding(addr)   # (jargon: cache = memoized data; speeds up repeats)
         funded_usd = float(funding.get("funded_usd", 0.0))
+        funding_events = funding.get("events", [])
     except Exception as e:
-        st.error(f"Funding error: {e}")
+        st.error("Funding error: " + _fmt_err(e))
         status.update(state="error")
         st.stop()
 
@@ -157,10 +226,25 @@ with st.status("Running analysis…", expanded=False) as status:
         status.update(state="error")
         st.stop()
 
+
     status.update(label="3/3 Computing ROI…")
-    pnl = compute_pnl(funded_usd, current_usd)
+    try:
+        pnl = compute_pnl(funded_usd, current_usd)
+    except Exception as e:
+        st.error(f"PnL error: {e}")
+        status.update(state="error")
+        st.stop()
     status.update(label="Done", state="complete")
 
+
+if DEV:
+    with st.expander("🧪 PnL sanity panel", expanded=False):
+        st.caption("Uses the two upstream totals to compute net & ROI.")
+        st.json({
+            "funded_usd": funded_usd,
+            "current_value_usd": current_usd,
+            "computed": pnl
+        })
 # --- Results ---
 st.subheader("Your ROI snapshot")
 
@@ -169,9 +253,26 @@ c3, c4 = st.columns(2)
 
 c1.metric("Total Funded", format_usd(pnl["funded_usd"]))
 c2.metric("Current Value", format_usd(pnl["current_value_usd"]))
-delta = f'{format_usd(pnl["net_pnl_usd"])}'
-c3.metric("Net PnL", delta)
-c4.metric("ROI", f'{pnl["roi_pct"]}%')
+net = float(pnl["net_pnl_usd"])
+roi = float(pnl["roi_pct"])
+dc = roi_delta_color(roi)
+
+# Net PnL card: show the number as value, color via ROI delta
+c3.metric(
+    "Net PnL",
+    format_usd(net),
+    delta=f"{roi:+.2f}%",
+    delta_color=dc
+)
+
+# ROI card: show ROI as value, color via Net PnL size/sign (nice reinforcement)
+c4.metric(
+    "ROI",
+    f"{roi:.2f}%",
+    delta=signed_usd(net),
+    delta_color=dc
+)
+
 
 # Pro-gated token view
 st.divider()

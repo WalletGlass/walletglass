@@ -1,6 +1,6 @@
 {
   "wallet": "0x0193138F52c349A66d0b7Ccbe29d70E613E6C968",
-  "total_usd_value": 1148265.84,
+  "total_usd_value": 1147800.64,
   "tokens": [
     {
       "contract_name": "Ethereum Games",
@@ -12,115 +12,115 @@
       "contract_name": "PinLink",
       "contract_ticker_symbol": "Pin",
       "balance": 3455.289078,
-      "quote": 2478.17
+      "quote": 2285.55
     },
     {
       "contract_name": "NeuralAI",
       "contract_ticker_symbol": "NEURAL",
       "balance": 543.745214,
-      "quote": 1880.67
+      "quote": 1842.38
     },
     {
       "contract_name": "Destra Network",
       "contract_ticker_symbol": "DSync",
       "balance": 12004.521877,
-      "quote": 1686.16
+      "quote": 1735.23
     },
     {
       "contract_name": "zKML",
       "contract_ticker_symbol": "ZKML",
       "balance": 8228.6113,
-      "quote": 1580.41
+      "quote": 1534.02
     },
     {
       "contract_name": "HashAI",
       "contract_ticker_symbol": "HashAI",
       "balance": 1921142.648879,
-      "quote": 999.46
+      "quote": 943.65
     },
     {
       "contract_name": "0x0.ai: AI Smart Contract Auditor",
       "contract_ticker_symbol": "0x0",
       "balance": 18622.342878,
-      "quote": 958.56
+      "quote": 914.78
     },
     {
       "contract_name": "NodeAI",
       "contract_ticker_symbol": "GPU",
       "balance": 2387.298171,
-      "quote": 822.58
+      "quote": 787.32
     },
     {
       "contract_name": "PAAL AI",
       "contract_ticker_symbol": "$PAAL",
       "balance": 6195.088283,
-      "quote": 669.12
+      "quote": 635.16
     },
     {
       "contract_name": "Vertical AI",
       "contract_ticker_symbol": "VERTAI",
       "balance": 1810.004261,
-      "quote": 667.37
-    },
-    {
-      "contract_name": "SPECTRE AI",
-      "contract_ticker_symbol": "SPECTRE",
-      "balance": 126.27178,
-      "quote": 354.44
+      "quote": 627.83
     },
     {
       "contract_name": "SIDUS",
       "contract_ticker_symbol": "SIDUS",
       "balance": 488857.319073,
-      "quote": 336.78
+      "quote": 335.96
+    },
+    {
+      "contract_name": "SPECTRE AI",
+      "contract_ticker_symbol": "SPECTRE",
+      "balance": 126.27178,
+      "quote": 331.11
     },
     {
       "contract_name": "ZKCrypt AI",
       "contract_ticker_symbol": "ZKAI",
       "balance": 1317.873841,
-      "quote": 287.54
+      "quote": 283.87
     },
     {
       "contract_name": "CryptoAutos",
       "contract_ticker_symbol": "AUTOS",
       "balance": 18123.386343,
-      "quote": 244.78
+      "quote": 255.66
     },
     {
       "contract_name": "Reploy",
       "contract_ticker_symbol": "RAI",
       "balance": 483.819401,
-      "quote": 237.08
+      "quote": 235.94
     },
     {
       "contract_name": "WAGMI GAMES",
       "contract_ticker_symbol": "WAGMIGAMES",
       "balance": 24240247.993477,
-      "quote": 169.58
+      "quote": 162.16
     },
     {
       "contract_name": "GATSBY",
       "contract_ticker_symbol": "GATSBY",
       "balance": 2276.52785,
-      "quote": 120.45
+      "quote": 117.02
     },
     {
       "contract_name": "Ether",
       "contract_ticker_symbol": "ETH",
       "balance": 0.02009,
-      "quote": 96.72
+      "quote": 94.8
     },
     {
       "contract_name": "OpSec",
       "contract_ticker_symbol": "OPSEC",
       "balance": 8710.415862,
-      "quote": 25.29
+      "quote": 25.74
     },
     {
       "contract_name": "spurdo",
       "contract_ticker_symbol": "spurdo",
       "balance": 20839639206.781036,
-      "quote": 22.59
+      "quote": 24.62
     },
     {
       "contract_name": "ZKGPT",
@@ -132,7 +132,7 @@
       "contract_name": "Wrapped TON Coin",
       "contract_ticker_symbol": "TONCOIN",
       "balance": 5.961387,
-      "quote": 20.36
+      "quote": 20.11
     },
     {
       "contract_name": "SOS",

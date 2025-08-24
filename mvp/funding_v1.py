@@ -24,6 +24,10 @@ BASE_URL = "https://deep-index.moralis.io/api/v2.2"
 HEADERS = {"x-api-key": MORALIS_API_KEY}
 WALLET = "0x0193138F52c349A66d0b7Ccbe29d70E613E6C968".lower()
 
+def _sum_funded_usd(events: list) -> float:
+    """Sum USD across accepted events."""
+    return round(sum(e.get("usd", 0.0) for e in events if e.get("status") == "accepted"), 2)
+
 # Load fallback ETH price DB
 with open("data/eth_price_db.json") as f:
     ETH_PRICE_DB = json.load(f)
@@ -97,12 +101,12 @@ def label_funding_source(sender: str) -> tuple[str, str]:
         return "eoa", "from_eoa_not_in_registry"
 
 
-def parse_eth(tx: dict) -> list:
+def parse_eth(tx: dict, target_wallet: str) -> list:
     results = []
     for t in tx.get("native_transfers", []):
         to_addr = t.get("to_address", "").lower()
         from_addr = t.get("from_address", "").lower()
-        if to_addr != WALLET or from_addr == WALLET:
+        if to_addr != target_wallet or from_addr == target_wallet:
             continue
 
         amount = float(t.get("value_formatted", 0))
@@ -131,12 +135,12 @@ def parse_eth(tx: dict) -> list:
     return results
 
 
-def parse_erc20(tx: dict) -> list:
+def parse_erc20(tx: dict, target_wallet: str) -> list:
     results = []
     for t in tx.get("erc20_transfers", []):
         to_addr = t.get("to_address", "").lower()
         from_addr = t.get("from_address", "").lower()
-        if to_addr != WALLET or from_addr == WALLET:
+        if to_addr != target_wallet or from_addr == target_wallet:
             continue
 
         symbol = t.get("token_symbol", "UNKNOWN")
@@ -166,6 +170,35 @@ def parse_erc20(tx: dict) -> list:
         })
     return results
 
+from typing import Dict, Any, List  # keep your type hints clear
+
+def get_funding(address: str) -> Dict[str, Any]:
+    """
+    UI entry point (pure function): returns totals + all events.
+    Returns:
+      {
+        "funded_usd": float,
+        "events": List[dict]
+      }
+    """
+    target = address.lower()
+
+    # 1) fetch raw history (network I/O = API calls)
+    txs = fetch_transactions(target)
+
+    # 2) parse into inbound events for this wallet
+    all_events: List[dict] = []
+    for tx in txs:
+        all_events += parse_eth(tx, target)
+        all_events += parse_erc20(tx, target)
+
+    # 3) compute clean totals for UI
+    funded_usd = _sum_funded_usd(all_events)
+
+    return {
+        "funded_usd": funded_usd,
+        "events": all_events
+    }
 
 def build_wallet_funding():
     print("🔍 Fetching wallet transaction history...")
@@ -173,8 +206,8 @@ def build_wallet_funding():
 
     all_events = []
     for tx in txs:
-        all_events += parse_eth(tx)
-        all_events += parse_erc20(tx)
+        all_events += parse_eth(tx, WALLET)
+        all_events += parse_erc20(tx, WALLET)
 
     Path("data").mkdir(exist_ok=True)
 

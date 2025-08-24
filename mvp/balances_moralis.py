@@ -26,6 +26,11 @@ from typing import Any, Dict, List, Tuple, Optional
 
 import requests
 from dotenv import load_dotenv
+from datetime import datetime, timezone  # <-- add
+
+ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_PATH = ROOT / "data" / "wallet_portfolio.json"
+RAW_OUTPUT_PATH = ROOT / "data" / "wallet_portfolio_raw.json"  # <-- add
 
 # ---- Env & constants ----
 load_dotenv()
@@ -36,6 +41,22 @@ BASE_URL = "https://deep-index.moralis.io/api/v2.2"
 HEADERS = {"X-API-Key": API_KEY}
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "data" / "wallet_portfolio.json"
 DEBUG = os.getenv("DEBUG_BALANCES") in ("1", "true", "True")
+# Denylist (env CSV + optional file)
+ENV_DENY = {a.strip().lower() for a in os.getenv("SPAM_TOKEN_ADDRESSES", "").split(",") if a.strip()}
+FILE_DENY_PATH = ROOT / "data" / "spam_tokens.json"
+FILE_DENY = set()
+if FILE_DENY_PATH.exists():
+    try:
+        FILE_DENY = {a.strip().lower() for a in json.loads(FILE_DENY_PATH.read_text()) if isinstance(a, str)}
+    except Exception:
+        print("[warn] Could not parse /data/spam_tokens.json; ignoring file denylist")
+DENYLIST = ENV_DENY.union(FILE_DENY)
+
+def is_spam(token: Dict[str, Any]) -> bool:
+    addr = (token.get("token_address") or "").lower()
+    spam_flag = token.get("possible_spam")
+    spam_truthy = (spam_flag is True) or (isinstance(spam_flag, str) and spam_flag.strip().lower() == "true")
+    return (addr in DENYLIST) or spam_truthy
 
 # Moralis' pseudo-address for native ETH in some price endpoints
 ETH_PSEUDO = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
@@ -53,44 +74,29 @@ def http_get(url: str, params: Dict[str, Any], timeout: int = 20) -> Dict[str, A
 
 
 # ---- Endpoint callers ----
-def call_wallets_tokens(address: str) -> Tuple[List[Dict[str, Any]], str]:
-    """
-    Newer endpoint variant that can include price fields.
-    We explicitly request USD price/value fields.
-    """
+def call_wallets_tokens(address: str) -> Tuple[List[Dict[str, Any]], str, Dict[str, Any] | List[Dict[str, Any]]]:
     url = f"{BASE_URL}/wallets/{address}/tokens"
     params = {"chain": CHAIN, "include": "usd_price,usd_value"}
     data = http_get(url, params)
-
-    # Shape can be a dict with "result" or sometimes a dict with pagination
-    items = []
     if isinstance(data, dict):
-        # common shapes: {"result":[...]} or {"cursor":"", "page":.., "result":[...]}
         items = data.get("result") or data.get("items") or []
     elif isinstance(data, list):
         items = data
     else:
         items = []
+    return items, "wallets/{address}/tokens", data
 
-    return items, "wallets/{address}/tokens"
-
-
-def call_erc20(address: str) -> Tuple[List[Dict[str, Any]], str]:
-    """
-    Legacy endpoint; include=price adds price fields if available.
-    """
+def call_erc20(address: str) -> Tuple[List[Dict[str, Any]], str, Dict[str, Any] | List[Dict[str, Any]]]:
     url = f"{BASE_URL}/{address}/erc20"
     params = {"chain": CHAIN, "include": "price"}
     data = http_get(url, params)
-
     if isinstance(data, dict):
         items = data.get("result") or data.get("items") or []
     elif isinstance(data, list):
         items = data
     else:
         items = []
-
-    return items, "{address}/erc20"
+    return items, "{address}/erc20", data
 
 
 def get_native_eth_if_missing(address: str) -> Optional[Dict[str, Any]]:
@@ -136,31 +142,26 @@ def as_float(x: Any, default: float = 0.0) -> float:
 
 
 def normalize_item(token: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """
-    Convert a Moralis token item into WalletGlass token record:
-      { contract_name, contract_ticker_symbol, balance, quote }
-    Return None for dust (< $0.01) or unusable entries.
-    """
-    # price/value keys vary by endpoint/version
+    if is_spam(token):
+        return None
+
     usd_value = token.get("usd_value")
     if usd_value is None:
         usd_value = token.get("usdValue")
     if usd_value is None:
         usd_value = token.get("quote")
     usd_value = as_float(usd_value, 0.0)
-
-    # skip dust
     if usd_value < 0.01:
         return None
 
     name = token.get("name") or "Unknown"
     symbol = token.get("symbol") or "UNK"
+    contract = (token.get("token_address") or "").lower()
 
-    # Prefer pre-formatted balance if present
-    if "balance_formatted" in token and token["balance_formatted"] not in (None, ""):
+    # balance
+    if token.get("balance_formatted") not in (None, ""):
         balance = as_float(token["balance_formatted"], 0.0)
     else:
-        # compute from balance + decimals
         raw = token.get("balance")
         dec = token.get("decimals")
         try:
@@ -170,10 +171,20 @@ def normalize_item(token: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         except Exception:
             balance = 0.0
 
+    # price
+    usd_price = token.get("usd_price")
+    if usd_price is None:
+        usd_price = token.get("usdPrice")
+    usd_price = as_float(usd_price, 0.0)
+    if usd_price == 0 and balance > 0:
+        usd_price = usd_value / balance
+
     return {
         "contract_name": name,
         "contract_ticker_symbol": symbol,
+        "contract_address": contract,
         "balance": round(balance, 6),
+        "usd_price": round(usd_price, 6),
         "quote": round(usd_value, 2),
     }
 
@@ -191,34 +202,33 @@ def tokens_include_native(items: List[Dict[str, Any]]) -> bool:
 
 
 # ---- Build portfolio ----
-def fetch_all_tokens() -> Tuple[List[Dict[str, Any]], str]:
-    """
-    Try modern endpoint first; fall back to legacy.
-    Return (items, endpoint_used).
-    """
+def fetch_all_tokens(address: str) -> Tuple[List[Dict[str, Any]], str, Dict[str, Any] | List[Dict[str, Any]]]:
     try:
-        items, src = call_wallets_tokens(ADDRESS)
+        items, src, raw = call_wallets_tokens(address)
         if items:
-            return items, src
+            return items, src, raw
     except Exception as e:
         print(f"[info] wallets/tokens endpoint failed or empty: {e}")
+    items, src, raw = call_erc20(address)
+    return items, src, raw
 
-    items, src = call_erc20(ADDRESS)
-    return items, src
 
 
-def build_portfolio() -> Dict[str, Any]:
-    items, endpoint_used = fetch_all_tokens()
+def build_portfolio(address: str) -> Dict[str, Any]:
+    items, endpoint_used, raw_payload = fetch_all_tokens(address)
 
     if DEBUG:
         # Print just a peek of raw data for troubleshooting
         preview = items[:2] if isinstance(items, list) else items
         print("[debug] endpoint used:", endpoint_used)
         print("[debug] first items:", json.dumps(preview, indent=2, default=str))
-
+    # save raw payload
+    RAW_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(RAW_OUTPUT_PATH, "w") as f:
+        json.dump(raw_payload, f, indent=2)
     # Top up native ETH if missing
     if not tokens_include_native(items):
-        native = get_native_eth_if_missing(ADDRESS)
+        native = get_native_eth_if_missing(address)
         if native:
             items.append(native)
 
@@ -232,12 +242,19 @@ def build_portfolio() -> Dict[str, Any]:
 
     tokens.sort(key=lambda x: x["quote"], reverse=True)
 
+    denom = sum(t["quote"] for t in tokens) or 1.0
+    for t in tokens:
+        t["portfolio_pct"] = round((t["quote"] / denom) * 100, 4)
+
+    snapshot_ts = datetime.now(timezone.utc).isoformat()
+
     return {
-        "wallet": ADDRESS,
-        "total_usd_value": round(total, 2),
+        "wallet": address,
+        "total_usd_value": round(denom, 2),
         "tokens": tokens,
-        "meta": {"source": "moralis", "endpoint": endpoint_used},
+        "meta": {"source": "moralis", "endpoint": endpoint_used, "ts_iso": snapshot_ts},
     }
+
 
 
 def save_to_file(data: Dict[str, Any]) -> None:
@@ -247,12 +264,48 @@ def save_to_file(data: Dict[str, Any]) -> None:
         json.dump(data, f, indent=2)
     tmp.replace(OUTPUT_PATH)
     print(f"[✅] Portfolio saved to {OUTPUT_PATH}")
+def get_portfolio(address: str) -> Dict[str, Any]:
+    """
+    UI entrypoint (pure function).
+    Calls build_portfolio(address) and reshapes keys for the app.
+    Returns:
+      {
+        "current_value_usd": float,
+        "tokens": [
+          {"symbol": str, "name": str, "amount": float, "usd": float}
+        ]
+      }
+    """
+    if not API_KEY:
+        raise RuntimeError("MORALIS_API_KEY missing")  # ← keep message style consistent if you prefer
+    # ^ you can change this to MORALIS_API_KEY to match your env naming (you’re already using that at the top)
+
+    raw = build_portfolio(address)
+
+    # Your normalize_item() currently returns:
+    # {"contract_name", "contract_ticker_symbol", "balance", "quote"}
+    ui_tokens: List[Dict[str, Any]] = []
+    for t in raw.get("tokens", []):
+        ui_tokens.append({
+            "symbol": t.get("contract_ticker_symbol", "UNK"),
+            "name": t.get("contract_name", t.get("contract_ticker_symbol", "Unknown")),
+            "contract_address": t.get("contract_address", ""),
+            "amount": float(t.get("balance", 0.0)),
+            "usd_price": float(t.get("usd_price", 0.0)),
+            "usd": float(t.get("quote", 0.0)),
+            "portfolio_pct": float(t.get("portfolio_pct", 0.0)),
+        })
+
+
+    return {
+        "current_value_usd": float(raw.get("total_usd_value", 0.0)),
+        "tokens": ui_tokens,
+    }
 
 
 if __name__ == "__main__":
     if not API_KEY:
         raise SystemExit("[❌] MORALIS_API_KEY missing in .env")
-    portfolio = build_portfolio()
+    portfolio = build_portfolio(ADDRESS)   # ← pass ADDRESS here
     save_to_file(portfolio)
     print(f"[📈] Total USD Value: ${portfolio['total_usd_value']} ({len(portfolio['tokens'])} tokens)")
-
