@@ -8,3 +8,32 @@ __pycache__/
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+# --- Python cache ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# --- Virtual envs ---
+.venv/
+venv/
+ENV/
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+
+# --- IDE/project files ---
+.vscode/
+.idea/
+*.iml
+
+# --- Local data/output ---
+data/*.json
+!data/known_funding_sources.json   # keep your curated source list tracked
+!data/eth_price_db.json            # keep your fallback price db tracked
+
+# --- Env & secrets ---
+.env
+*.env
