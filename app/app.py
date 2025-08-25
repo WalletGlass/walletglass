@@ -17,14 +17,25 @@ from dotenv import load_dotenv
 from mvp.funding_v1 import get_funding
 from mvp.balances_moralis import get_portfolio
 from mvp.pnl import compute_pnl
-
+from mvp.defunding import get_defunding
 # Page config FIRST
+
 st.set_page_config(
     page_title="WalletGlass — ROI, not vibes.",
     page_icon="💎",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+st.markdown("""
+<style>
+/* Hide footer / “Made with Streamlit” badge */
+footer {visibility: hidden;}
+/* Hide the top toolbar (deploy/fork badge area on Community Cloud) */
+[data-testid="stToolbar"] {display: none;}
+/* Hide the hamburger MainMenu (we already removed items via menu_items) */
+#MainMenu {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
 
 from urllib.parse import urlencode
 
@@ -60,6 +71,10 @@ def cached_funding(address: str) -> dict:
 @st.cache_data(ttl=600, show_spinner=False)
 def cached_portfolio(address: str) -> dict:
     return get_portfolio(address)    # uses imported function
+
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_defunding(address: str) -> dict:
+    return get_defunding(address)
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -129,6 +144,9 @@ def cached_funding(address: str) -> dict:
 def cached_portfolio(address: str) -> dict:
     return get_portfolio(address) # ← imported from mvp.balances_moralis
 
+@st.cache_data(ttl=600, show_spinner=False)
+def cached_defunding(address: str) -> dict:
+    return get_defunding(address)
 
 def save_last_address(addr: str):
     try:
@@ -235,7 +253,15 @@ with st.status("Running analysis…", expanded=False) as status:
         status.update(state="error")
         st.stop()
     status.update(label="Done", state="complete")
-
+    # NEW: defunding (tiny extra call; also cached)
+    try:
+        defunding = cached_defunding(addr)
+        defunded_usd = float(defunding.get("defunded_usd", 0.0))
+        defund_events = defunding.get("events", [])
+    except Exception as e:
+        st.error("Defunding error: " + _fmt_err(e))
+        status.update(state="error")
+        st.stop()
 
 if DEV:
     with st.expander("🧪 PnL sanity panel", expanded=False):
@@ -245,11 +271,19 @@ if DEV:
             "current_value_usd": current_usd,
             "computed": pnl
         })
+if DEV:
+    with st.expander("🧪 Defunding sanity panel", expanded=False):
+        st.caption(f"{len(defund_events)} outbound events (first 10 shown)")
+        st.json(defund_events[:10])
+
 # --- Results ---
 st.subheader("Your ROI snapshot")
 
-c1, c2 = st.columns(2)
-c3, c4 = st.columns(2)
+c1, c2, c5 = st.columns([1,1,1])
+c1.metric("Total Funded", format_usd(funded_usd))
+c2.metric("Current Value", format_usd(current_usd))
+c5.metric("Total Defunded", format_usd(defunded_usd))
+
 
 c1.metric("Total Funded", format_usd(pnl["funded_usd"]))
 c2.metric("Current Value", format_usd(pnl["current_value_usd"]))
@@ -257,6 +291,7 @@ net = float(pnl["net_pnl_usd"])
 roi = float(pnl["roi_pct"])
 dc = roi_delta_color(roi)
 
+c3,c4 = st.columns(2)
 # Net PnL card: show the number as value, color via ROI delta
 c3.metric(
     "Net PnL",
@@ -285,10 +320,17 @@ pro_col.button("Upgrade", disabled=True)
 st.divider()
 dl1, dl2, dl3 = st.columns(3)
 with dl1:
-    st.download_button("Download funding.json", data=json.dumps(funding, indent=2), file_name="wallet_funding.json")
+    st.download_button("Download funding.json",
+        data=json.dumps(funding, indent=2), file_name="wallet_funding.json")
 with dl2:
-    st.download_button("Download portfolio.json", data=json.dumps(portfolio, indent=2), file_name="wallet_portfolio.json")
+    st.download_button("Download portfolio.json",
+        data=json.dumps(portfolio, indent=2), file_name="wallet_portfolio.json")
 with dl3:
-    st.download_button("Download pnl.json", data=json.dumps(pnl, indent=2), file_name="wallet_pnl.json")
+    st.download_button("Download pnl.json",
+        data=json.dumps(pnl, indent=2), file_name="wallet_pnl.json")
+# NEW:
+with st.columns(3)[0]:
+    st.download_button("Download defunding.json",
+        data=json.dumps(defunding, indent=2), file_name="wallet_defunding.json")
 
 st.caption(f"Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
