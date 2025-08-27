@@ -6,7 +6,7 @@ authors = [
     {name = "Tyler Wares"}
 ]
 readme = "README.md"
-requires-python = ">=3.12,<3.14"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "web3 (>=7.12.0,<8.0.0)",
     "duckdb (>=1.3.1,<2.0.0)",

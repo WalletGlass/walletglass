@@ -19,10 +19,11 @@ from typing import Dict, Any, List
 
 # Load API keys
 load_dotenv()
-MORALIS_API_KEY = os.getenv("MORALIS_API_KEY")
-ETHERSCAN_API_KEY = os.getenv("ETHERSCAN_API_KEY")
+from mvp.secrets import get_secret
+MORALIS_API_KEY  = get_secret("MORALIS_API_KEY")
+ETHERSCAN_API_KEY = get_secret("ETHERSCAN_API_KEY")
+HEADERS = {"X-API-Key": MORALIS_API_KEY}
 BASE_URL = "https://deep-index.moralis.io/api/v2.2"
-HEADERS = {"x-api-key": MORALIS_API_KEY}
 WALLET = "0x0193138F52c349A66d0b7Ccbe29d70E613E6C968".lower()
 
 # Load fallback ETH price DB
@@ -141,9 +142,12 @@ def parse_erc20(tx: dict, target_wallet: str) -> list:
             continue
 
         try:
-            usd = float(tx.get("value", 0))
-            if usd <= 0 or usd > 1_000_000:
-                continue
+            usd = t.get("usd_value") or t.get("usdValue")
+            if usd is not None:
+                usd = float(usd)
+            else:
+                usd = float(tx.get("value", 0) or 0)
+
         except:
             continue
 

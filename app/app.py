@@ -26,6 +26,22 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+
+from mvp.secrets import get_secret
+
+def _require_secrets():
+    try:
+        # Touch the keys to force a clear error early
+        _ = get_secret("MORALIS_API_KEY")
+        _ = get_secret("ETHERSCAN_API_KEY")
+    except RuntimeError as e:
+        import streamlit as st
+        st.error(str(e))
+        st.stop()
+
+_require_secrets()
+
+
 st.markdown("""
 <style>
 /* Hide footer / “Made with Streamlit” badge */
@@ -234,7 +250,15 @@ with st.status("Running analysis…", expanded=False) as status:
         st.error("Funding error: " + _fmt_err(e))
         status.update(state="error")
         st.stop()
-
+    # NEW: defunding (tiny extra call; also cached)
+    try:
+        defunding = cached_defunding(addr)
+        defunded_usd = float(defunding.get("defunded_usd", 0.0))
+        defund_events = defunding.get("events", [])
+    except Exception as e:
+        st.error("Defunding error: " + _fmt_err(e))
+        status.update(state="error")
+        st.stop()
     status.update(label="2/3 Fetching balances…")
     try:
         portfolio = cached_portfolio(addr)
@@ -247,21 +271,13 @@ with st.status("Running analysis…", expanded=False) as status:
 
     status.update(label="3/3 Computing ROI…")
     try:
-        pnl = compute_pnl(funded_usd, current_usd)
+        pnl = compute_pnl(funded_usd, defunded_usd, current_usd)
     except Exception as e:
         st.error(f"PnL error: {e}")
         status.update(state="error")
         st.stop()
     status.update(label="Done", state="complete")
-    # NEW: defunding (tiny extra call; also cached)
-    try:
-        defunding = cached_defunding(addr)
-        defunded_usd = float(defunding.get("defunded_usd", 0.0))
-        defund_events = defunding.get("events", [])
-    except Exception as e:
-        st.error("Defunding error: " + _fmt_err(e))
-        status.update(state="error")
-        st.stop()
+
 
 if DEV:
     with st.expander("🧪 PnL sanity panel", expanded=False):

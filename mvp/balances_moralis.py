@@ -34,7 +34,9 @@ RAW_OUTPUT_PATH = ROOT / "data" / "wallet_portfolio_raw.json"  # <-- add
 
 # ---- Env & constants ----
 load_dotenv()
-API_KEY = os.getenv("MORALIS_API_KEY")
+from mvp.secrets import get_secret
+
+API_KEY = get_secret("MORALIS_API_KEY")
 ADDRESS = os.getenv("WALLET_ADDRESS", "0x0193138F52c349A66d0b7Ccbe29d70E613E6C968")
 CHAIN = "eth"
 BASE_URL = "https://deep-index.moralis.io/api/v2.2"
