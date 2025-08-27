@@ -30,7 +30,7 @@ Thumbs.db
 *.iml
 
 # --- Local data/output ---
-data/*.json
+#data/*.json
 !data/known_funding_sources.json   # keep your curated source list tracked
 !data/eth_price_db.json            # keep your fallback price db tracked
 

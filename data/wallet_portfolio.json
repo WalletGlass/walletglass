@@ -1,0 +1,200 @@
+{
+  "wallet": "0x0193138F52c349A66d0b7Ccbe29d70E613E6C968",
+  "total_usd_value": 12413.41,
+  "tokens": [
+    {
+      "contract_name": "PinLink",
+      "contract_ticker_symbol": "Pin",
+      "contract_address": "0x2e44f3f609ff5aa4819b323fd74690f07c3607c4",
+      "balance": 3455.289078,
+      "usd_price": 0.670965,
+      "quote": 2318.38,
+      "portfolio_pct": 18.6764
+    },
+    {
+      "contract_name": "NeuralAI",
+      "contract_ticker_symbol": "NEURAL",
+      "contract_address": "0x32b053f2cba79f80ada5078cb6b305da92bde6e1",
+      "balance": 543.745214,
+      "usd_price": 3.023926,
+      "quote": 1644.25,
+      "portfolio_pct": 13.2458
+    },
+    {
+      "contract_name": "Destra Network",
+      "contract_ticker_symbol": "DSync",
+      "contract_address": "0xf94e7d0710709388bce3161c32b4eea56d3f91cc",
+      "balance": 12004.521877,
+      "usd_price": 0.135256,
+      "quote": 1623.68,
+      "portfolio_pct": 13.08
+    },
+    {
+      "contract_name": "zKML",
+      "contract_ticker_symbol": "ZKML",
+      "contract_address": "0xe92344b4edf545f3209094b192e46600a19e7c2d",
+      "balance": 8228.6113,
+      "usd_price": 0.181667,
+      "quote": 1494.87,
+      "portfolio_pct": 12.0424
+    },
+    {
+      "contract_name": "HashAI",
+      "contract_ticker_symbol": "HashAI",
+      "contract_address": "0x292fcdd1b104de5a00250febba9bc6a5092a0076",
+      "balance": 1921142.648879,
+      "usd_price": 0.00046,
+      "quote": 884.19,
+      "portfolio_pct": 7.1229
+    },
+    {
+      "contract_name": "0x0.ai: AI Smart Contract Auditor",
+      "contract_ticker_symbol": "0x0",
+      "contract_address": "0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5",
+      "balance": 18622.342878,
+      "usd_price": 0.04657,
+      "quote": 867.24,
+      "portfolio_pct": 6.9863
+    },
+    {
+      "contract_name": "NodeAI",
+      "contract_ticker_symbol": "GPU",
+      "contract_address": "0x1258d60b224c0c5cd888d37bbf31aa5fcfb7e870",
+      "balance": 2387.298171,
+      "usd_price": 0.292252,
+      "quote": 697.69,
+      "portfolio_pct": 5.6205
+    },
+    {
+      "contract_name": "PAAL AI",
+      "contract_ticker_symbol": "$PAAL",
+      "contract_address": "0x14fee680690900ba0cccfc76ad70fd1b95d10e16",
+      "balance": 6195.088283,
+      "usd_price": 0.096909,
+      "quote": 600.36,
+      "portfolio_pct": 4.8364
+    },
+    {
+      "contract_name": "Vertical AI",
+      "contract_ticker_symbol": "VERTAI",
+      "contract_address": "0xcdbddbdefb0ee3ef03a89afcd714aa4ef310d567",
+      "balance": 1810.004261,
+      "usd_price": 0.30989,
+      "quote": 560.9,
+      "portfolio_pct": 4.5185
+    },
+    {
+      "contract_name": "SPECTRE AI",
+      "contract_ticker_symbol": "SPECTRE",
+      "contract_address": "0x9cf0ed013e67db12ca3af8e7506fe401aa14dad6",
+      "balance": 126.27178,
+      "usd_price": 2.608612,
+      "quote": 329.39,
+      "portfolio_pct": 2.6535
+    },
+    {
+      "contract_name": "SIDUS",
+      "contract_ticker_symbol": "SIDUS",
+      "contract_address": "0x549020a9cb845220d66d3e9c6d9f9ef61c981102",
+      "balance": 488857.319073,
+      "usd_price": 0.00066,
+      "quote": 322.78,
+      "portfolio_pct": 2.6003
+    },
+    {
+      "contract_name": "ZKCrypt AI",
+      "contract_ticker_symbol": "ZKAI",
+      "contract_address": "0x5959e94661e1203e0c8ef84095a7846bacc6a94f",
+      "balance": 1317.873841,
+      "usd_price": 0.195909,
+      "quote": 258.18,
+      "portfolio_pct": 2.0798
+    },
+    {
+      "contract_name": "CryptoAutos",
+      "contract_ticker_symbol": "AUTOS",
+      "contract_address": "0xf477ac7719e2e659001455cdda0cc8f3ad10b604",
+      "balance": 18123.386343,
+      "usd_price": 0.012866,
+      "quote": 233.18,
+      "portfolio_pct": 1.8785
+    },
+    {
+      "contract_name": "Reploy",
+      "contract_ticker_symbol": "RAI",
+      "contract_address": "0xc575bd129848ce06a460a19466c30e1d0328f52c",
+      "balance": 483.819401,
+      "usd_price": 0.447495,
+      "quote": 216.51,
+      "portfolio_pct": 1.7442
+    },
+    {
+      "contract_name": "WAGMI GAMES",
+      "contract_ticker_symbol": "WAGMIGAMES",
+      "contract_address": "0x3b604747ad1720c01ded0455728b62c0d2f100f0",
+      "balance": 24240247.993477,
+      "usd_price": 6e-06,
+      "quote": 154.92,
+      "portfolio_pct": 1.248
+    },
+    {
+      "contract_name": "GATSBY",
+      "contract_ticker_symbol": "GATSBY",
+      "contract_address": "0xca7af58da871736994ce360f51ec6cd28351a3df",
+      "balance": 2276.52785,
+      "usd_price": 0.049482,
+      "quote": 112.65,
+      "portfolio_pct": 0.9075
+    },
+    {
+      "contract_name": "OpSec",
+      "contract_ticker_symbol": "OPSEC",
+      "contract_address": "0x6a7eff1e2c355ad6eb91bebb5ded49257f3fed98",
+      "balance": 8710.415862,
+      "usd_price": 0.003078,
+      "quote": 26.81,
+      "portfolio_pct": 0.216
+    },
+    {
+      "contract_name": "spurdo",
+      "contract_ticker_symbol": "spurdo",
+      "contract_address": "0x59c6766de1dc50a9c9db86cb0461b5ce07408ab7",
+      "balance": 20839639206.781036,
+      "usd_price": 0.0,
+      "quote": 25.51,
+      "portfolio_pct": 0.2055
+    },
+    {
+      "contract_name": "ZKGPT",
+      "contract_ticker_symbol": "ZKGPT",
+      "contract_address": "0x733fd1b5aa477d55070546922ba1bd3751c167c7",
+      "balance": 757353.439322,
+      "usd_price": 3e-05,
+      "quote": 22.74,
+      "portfolio_pct": 0.1832
+    },
+    {
+      "contract_name": "Wrapped TON Coin",
+      "contract_ticker_symbol": "TONCOIN",
+      "contract_address": "0x582d872a1b094fc48f5de31d3b73f2d9be47def1",
+      "balance": 5.961387,
+      "usd_price": 3.216293,
+      "quote": 19.17,
+      "portfolio_pct": 0.1544
+    },
+    {
+      "contract_name": "SOS",
+      "contract_ticker_symbol": "SOS",
+      "contract_address": "0x3b484b82567a09e2588a13d54d032153f0c0aee0",
+      "balance": 4885848.7298,
+      "usd_price": 0.0,
+      "quote": 0.01,
+      "portfolio_pct": 0.0001
+    }
+  ],
+  "meta": {
+    "source": "moralis",
+    "endpoint": "wallets/{address}/tokens",
+    "ts_iso": "2025-08-25T16:07:35.151323+00:00"
+  }
+}
