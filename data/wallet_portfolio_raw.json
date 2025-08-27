@@ -2,7 +2,7 @@
   "cursor": null,
   "page": 0,
   "page_size": 100,
-  "block_number": 23226495,
+  "block_number": 23228953,
   "result": [
     {
       "token_address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -19,13 +19,13 @@
       "percentage_relative_to_total_supply": null,
       "security_score": 99,
       "balance_formatted": "0.020089811142060169",
-      "usd_price": 4525.259790143026,
-      "usd_price_24hr_percent_change": -2.3402309884411663,
-      "usd_price_24hr_usd_change": -108.1345352588005,
-      "usd_value": 90.91161455273223,
-      "usd_value_24hr_usd_change": -2.1724023912837485,
+      "usd_price": 4590.309587997472,
+      "usd_price_24hr_percent_change": 5.002500552495317,
+      "usd_price_24hr_usd_change": 218.97458756569995,
+      "usd_value": 92.21845270645723,
+      "usd_value_24hr_usd_change": 4.399158109105429,
       "native_token": true,
-      "portfolio_percentage": 0.008620485994166567
+      "portfolio_percentage": 0.008743251365126695
     },
     {
       "token_address": "0x3fc29836e84e471a053d2d9e80494a867d670ead",
@@ -48,7 +48,7 @@
       "usd_value": 1042082.205381542,
       "usd_value_24hr_usd_change": 79826.02060759992,
       "native_token": false,
-      "portfolio_percentage": 98.8130625603526
+      "portfolio_percentage": 98.8000383586834
     },
     {
       "token_address": "0x2e44f3f609ff5aa4819b323fd74690f07c3607c4",
@@ -65,13 +65,13 @@
       "percentage_relative_to_total_supply": 0.003455289078274207,
       "security_score": 75,
       "balance_formatted": "3455.289078274207181392",
-      "usd_price": 0.6250402594014457,
-      "usd_price_24hr_percent_change": -7.054431745749465,
-      "usd_price_24hr_usd_change": -0.04743963516616001,
-      "usd_value": 2159.6947817914925,
-      "usd_value_24hr_usd_change": -163.91765326694568,
+      "usd_price": 0.6027983091167212,
+      "usd_price_24hr_percent_change": -1.5620755845214318,
+      "usd_price_24hr_usd_change": -0.00956558690822995,
+      "usd_value": 2082.842413893166,
+      "usd_value_24hr_usd_change": -33.05186797128969,
       "native_token": false,
-      "portfolio_percentage": 0.20478811986458836
+      "portfolio_percentage": 0.19747473790936926
     },
     {
       "token_address": "0xe92344b4edf545f3209094b192e46600a19e7c2d",
@@ -88,13 +88,13 @@
       "percentage_relative_to_total_supply": 0.008228611299824998,
       "security_score": 38,
       "balance_formatted": "8228.611299824997537752",
-      "usd_price": 0.2423571297270745,
-      "usd_price_24hr_percent_change": 34.377589915797834,
-      "usd_price_24hr_usd_change": 0.06200181164245999,
-      "usd_value": 1994.262616265358,
-      "usd_value_24hr_usd_change": 510.18880789076735,
+      "usd_price": 0.2493322160668234,
+      "usd_price_24hr_percent_change": 16.068773613366545,
+      "usd_price_24hr_usd_change": 0.03451800867511998,
+      "usd_value": 2051.657890537871,
+      "usd_value_24hr_usd_change": 284.0352762315495,
       "native_token": false,
-      "portfolio_percentage": 0.18910139300445222
+      "portfolio_percentage": 0.19451812653284897
     },
     {
       "token_address": "0x32b053f2cba79f80ada5078cb6b305da92bde6e1",
@@ -111,13 +111,13 @@
       "percentage_relative_to_total_supply": 0.005437452136676975,
       "security_score": 49,
       "balance_formatted": "543.745213667697506987",
-      "usd_price": 2.9777748052594357,
-      "usd_price_24hr_percent_change": -1.5340807069711515,
-      "usd_price_24hr_usd_change": -0.04639317757099981,
-      "usd_value": 1619.1507977400781,
-      "usd_value_24hr_usd_change": -25.226068251066724,
+      "usd_price": 3.033072059981108,
+      "usd_price_24hr_percent_change": 6.278723203464702,
+      "usd_price_24hr_usd_change": 0.17918751135469968,
+      "usd_value": 1649.218415323951,
+      "usd_value_24hr_usd_change": 97.43235164814415,
       "native_token": false,
-      "portfolio_percentage": 0.15353227244980752
+      "portfolio_percentage": 0.15636275320160029
     },
     {
       "token_address": "0xf94e7d0710709388bce3161c32b4eea56d3f91cc",
@@ -129,41 +129,18 @@
       "balance": "12004521877002347479457",
       "possible_spam": false,
       "verified_contract": true,
-      "total_supply": "96850000000000000000",
-      "total_supply_formatted": "96.85",
-      "percentage_relative_to_total_supply": 12394.963218381361,
+      "total_supply": "71167066148383353454",
+      "total_supply_formatted": "71.167066148383353454",
+      "percentage_relative_to_total_supply": 16868.085937353262,
       "security_score": 43,
       "balance_formatted": "12004.521877002347479457",
-      "usd_price": 0.1282380063376323,
-      "usd_price_24hr_percent_change": -5.326697390904222,
-      "usd_price_24hr_usd_change": -0.007215181418080002,
-      "usd_value": 1539.4359525432726,
-      "usd_value_24hr_usd_change": -86.6148031798822,
+      "usd_price": 0.13380357416401997,
+      "usd_price_24hr_percent_change": 5.729096227993539,
+      "usd_price_24hr_usd_change": 0.007250355667300007,
+      "usd_value": 1606.2479332730838,
+      "usd_value_24hr_usd_change": 87.03705322415088,
       "native_token": false,
-      "portfolio_percentage": 0.14597349451007982
-    },
-    {
-      "token_address": "0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5",
-      "symbol": "0x0",
-      "name": "0x0.ai: AI Smart Contract Auditor",
-      "logo": "https://logo.moralis.io/0x1_0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5_2322329eb0db1fcbda666155f31ee530.jpg",
-      "thumbnail": "https://logo.moralis.io/0x1_0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5_2322329eb0db1fcbda666155f31ee530.jpg",
-      "decimals": 9,
-      "balance": "18622342878103",
-      "possible_spam": false,
-      "verified_contract": true,
-      "total_supply": "1000000000000000000",
-      "total_supply_formatted": "1000000000",
-      "percentage_relative_to_total_supply": 0.0018622342878103,
-      "security_score": 43,
-      "balance_formatted": "18622.342878103",
-      "usd_price": 0.045280800035350725,
-      "usd_price_24hr_percent_change": -2.7005206197705864,
-      "usd_price_24hr_usd_change": -0.001256756304905994,
-      "usd_value": 843.2345840531198,
-      "usd_value_24hr_usd_change": -23.403746824177183,
-      "native_token": false,
-      "portfolio_percentage": 0.07995779150320159
+      "portfolio_percentage": 0.15228871254243523
     },
     {
       "token_address": "0x292fcdd1b104de5a00250febba9bc6a5092a0076",
@@ -180,13 +157,36 @@
       "percentage_relative_to_total_supply": 0.001921142648878721,
       "security_score": 45,
       "balance_formatted": "1921142.648878721216236813",
-      "usd_price": 0.000434414955427526,
-      "usd_price_24hr_percent_change": -5.533649745544855,
-      "usd_price_24hr_usd_change": -2.5447158708760003e-05,
-      "usd_value": 834.573098182569,
-      "usd_value_24hr_usd_change": -48.88762188818441,
+      "usd_price": 0.000452100884920501,
+      "usd_price_24hr_percent_change": 6.398713686575092,
+      "usd_price_24hr_usd_change": 2.718890125471998e-05,
+      "usd_value": 868.5502916165852,
+      "usd_value_24hr_usd_change": 52.233757776594736,
       "native_token": false,
-      "portfolio_percentage": 0.07913648590871733
+      "portfolio_percentage": 0.08234744023552851
+    },
+    {
+      "token_address": "0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5",
+      "symbol": "0x0",
+      "name": "0x0.ai: AI Smart Contract Auditor",
+      "logo": "https://logo.moralis.io/0x1_0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5_2322329eb0db1fcbda666155f31ee530.jpg",
+      "thumbnail": "https://logo.moralis.io/0x1_0x5a3e6a77ba2f983ec0d371ea3b475f8bc0811ad5_2322329eb0db1fcbda666155f31ee530.jpg",
+      "decimals": 9,
+      "balance": "18622342878103",
+      "possible_spam": false,
+      "verified_contract": true,
+      "total_supply": "1000000000000000000",
+      "total_supply_formatted": "1000000000",
+      "percentage_relative_to_total_supply": 0.0018622342878103,
+      "security_score": 43,
+      "balance_formatted": "18622.342878103",
+      "usd_price": 0.04573510485484004,
+      "usd_price_24hr_percent_change": 3.9415573983567675,
+      "usd_price_24hr_usd_change": 0.0017343163352300031,
+      "usd_value": 851.6948041728244,
+      "usd_value_24hr_usd_change": 32.29703345374815,
+      "native_token": false,
+      "portfolio_percentage": 0.08074936784028196
     },
     {
       "token_address": "0x1258d60b224c0c5cd888d37bbf31aa5fcfb7e870",
@@ -203,13 +203,13 @@
       "percentage_relative_to_total_supply": 0.002387298171428393,
       "security_score": 89,
       "balance_formatted": "2387.298171428392959191",
-      "usd_price": 0.30254384908963017,
-      "usd_price_24hr_percent_change": 3.579898675335058,
-      "usd_price_24hr_usd_change": 0.010456433520770025,
-      "usd_value": 722.2623777085818,
-      "usd_value_24hr_usd_change": 24.962624623796835,
+      "usd_price": 0.30213117758709346,
+      "usd_price_24hr_percent_change": 4.807751998507265,
+      "usd_price_24hr_usd_change": 0.013859392508260016,
+      "usd_value": 721.2772077851753,
+      "usd_value_24hr_usd_change": 33.0865023920775,
       "native_token": false,
-      "portfolio_percentage": 0.06848687862141979
+      "portfolio_percentage": 0.06838444743457435
     },
     {
       "token_address": "0x14fee680690900ba0cccfc76ad70fd1b95d10e16",
@@ -226,13 +226,13 @@
       "percentage_relative_to_total_supply": 0.0006195088283307,
       "security_score": 82,
       "balance_formatted": "6195.088283307",
-      "usd_price": 0.09344424902037045,
-      "usd_price_24hr_percent_change": -3.4314560113350474,
-      "usd_price_24hr_usd_change": -0.00332043765786999,
-      "usd_value": 578.8953722485186,
-      "usd_value_24hr_usd_change": -20.570404429721712,
+      "usd_price": 0.0943313801739081,
+      "usd_price_24hr_percent_change": 2.54195261212525,
+      "usd_price_24hr_usd_change": 0.00233841751722301,
+      "usd_value": 584.3912280635564,
+      "usd_value_24hr_usd_change": 14.486702962428113,
       "native_token": false,
-      "portfolio_percentage": 0.05489243011586376
+      "portfolio_percentage": 0.05540625821167117
     },
     {
       "token_address": "0xcdbddbdefb0ee3ef03a89afcd714aa4ef310d567",
@@ -249,13 +249,13 @@
       "percentage_relative_to_total_supply": 0.001810004261144083,
       "security_score": 56,
       "balance_formatted": "1810.004261144083139662",
-      "usd_price": 0.29503752160869834,
-      "usd_price_24hr_percent_change": -4.655734915607801,
-      "usd_price_24hr_usd_change": -0.014406912566290009,
-      "usd_value": 534.0191713091335,
-      "usd_value_24hr_usd_change": -26.076573134915154,
+      "usd_price": 0.3078225020446302,
+      "usd_price_24hr_percent_change": 5.733371992449666,
+      "usd_price_24hr_usd_change": 0.016691616644880003,
+      "usd_value": 557.1600403768139,
+      "usd_value_24hr_usd_change": 30.21189725261631,
       "native_token": false,
-      "portfolio_percentage": 0.050637146964501584
+      "portfolio_percentage": 0.05282446344144227
     },
     {
       "token_address": "0x9cf0ed013e67db12ca3af8e7506fe401aa14dad6",
@@ -272,13 +272,13 @@
       "percentage_relative_to_total_supply": 0.001262717801460989,
       "security_score": 80,
       "balance_formatted": "126.271780146098920186",
-      "usd_price": 2.420056756881347,
-      "usd_price_24hr_percent_change": -7.228165059606528,
-      "usd_price_24hr_usd_change": -0.1885547451292,
-      "usd_value": 305.58487474600264,
-      "usd_value_24hr_usd_change": -23.80914332245806,
+      "usd_price": 2.4392398807286946,
+      "usd_price_24hr_percent_change": 0.41285788432401926,
+      "usd_price_24hr_usd_change": 0.010029187872299783,
+      "usd_value": 308.0071619429703,
+      "usd_value_24hr_usd_change": 1.2664034060549598,
       "native_token": false,
-      "portfolio_percentage": 0.028976387073722812
+      "portfolio_percentage": 0.029202225369132754
     },
     {
       "token_address": "0x549020a9cb845220d66d3e9c6d9f9ef61c981102",
@@ -295,13 +295,13 @@
       "percentage_relative_to_total_supply": 0.002587103270510328,
       "security_score": 97,
       "balance_formatted": "488857.31907320328168441",
-      "usd_price": 0.000603589033379687,
-      "usd_price_24hr_percent_change": -7.500927437462019,
-      "usd_price_24hr_usd_change": -4.894619390229994e-05,
-      "usd_value": 295.06891667997996,
-      "usd_value_24hr_usd_change": -23.927705129915516,
+      "usd_price": 0.000595701383516845,
+      "usd_price_24hr_percent_change": -6.827850627450832,
+      "usd_price_24hr_usd_change": -4.365424746138999e-05,
+      "usd_value": 291.21298131424294,
+      "usd_value_24hr_usd_change": -21.340698380133297,
       "native_token": false,
-      "portfolio_percentage": 0.027979235393275983
+      "portfolio_percentage": 0.02760996548622514
     },
     {
       "token_address": "0xf477ac7719e2e659001455cdda0cc8f3ad10b604",
@@ -318,13 +318,13 @@
       "percentage_relative_to_total_supply": 0.00181233863434242,
       "security_score": 59,
       "balance_formatted": "18123.386343424201617835",
-      "usd_price": 0.012439525075229562,
-      "usd_price_24hr_percent_change": -2.651659402749904,
-      "usd_price_24hr_usd_change": -0.0003388386841430002,
-      "usd_value": 225.44631886709834,
-      "usd_value_24hr_usd_change": -6.140904380821077,
+      "usd_price": 0.012130054321511832,
+      "usd_price_24hr_percent_change": 4.795272452976892,
+      "usd_price_24hr_usd_change": 0.0005550528566750004,
+      "usd_value": 219.83766083548124,
+      "usd_value_24hr_usd_change": 10.059437362542292,
       "native_token": false,
-      "portfolio_percentage": 0.02137743173731616
+      "portfolio_percentage": 0.020842855977255992
     },
     {
       "token_address": "0x5959e94661e1203e0c8ef84095a7846bacc6a94f",
@@ -341,13 +341,13 @@
       "percentage_relative_to_total_supply": 0.013178738413140746,
       "security_score": 22,
       "balance_formatted": "1317.873841314074586366",
-      "usd_price": 0.1707756246238684,
-      "usd_price_24hr_percent_change": -6.87150059256391,
-      "usd_price_24hr_usd_change": -0.012600705619280006,
-      "usd_value": 225.0607284258679,
-      "usd_value_24hr_usd_change": -16.606140317748388,
+      "usd_price": 0.1612763228604367,
+      "usd_price_24hr_percent_change": -12.047825603082186,
+      "usd_price_24hr_usd_change": -0.022091881469129993,
+      "usd_value": 212.5418471210926,
+      "usd_value_24hr_usd_change": -29.114312693577563,
       "native_token": false,
-      "portfolio_percentage": 0.021340869005321297
+      "portfolio_percentage": 0.020151138307462856
     },
     {
       "token_address": "0xc575bd129848ce06a460a19466c30e1d0328f52c",
@@ -364,13 +364,13 @@
       "percentage_relative_to_total_supply": 0.004838194009837328,
       "security_score": 41,
       "balance_formatted": "483.819400983732798456",
-      "usd_price": 0.42989866113558517,
-      "usd_price_24hr_percent_change": -3.552334170499074,
-      "usd_price_24hr_usd_change": -0.015833910449459976,
-      "usd_value": 207.99331271432754,
-      "usd_value_24hr_usd_change": -7.660753068887793,
+      "usd_price": 0.4354499156304611,
+      "usd_price_24hr_percent_change": 3.017283414470431,
+      "usd_price_24hr_usd_change": 0.012753935696189989,
+      "usd_value": 210.67911733874666,
+      "usd_value_24hr_usd_change": 6.170601528715688,
       "native_token": false,
-      "portfolio_percentage": 0.01972249033256534
+      "portfolio_percentage": 0.019974532495563156
     },
     {
       "token_address": "0x3b604747ad1720c01ded0455728b62c0d2f100f0",
@@ -387,13 +387,13 @@
       "percentage_relative_to_total_supply": 0.001101829454248958,
       "security_score": 48,
       "balance_formatted": "24240247.993477071106790143",
-      "usd_price": 6.042499028808e-06,
-      "usd_price_24hr_percent_change": -5.492129129029133,
-      "usd_price_24hr_usd_change": -3.5114731315400066e-07,
-      "usd_value": 146.47167495865028,
-      "usd_value_24hr_usd_change": -8.51189795309613,
+      "usd_price": 6.19910739914e-06,
+      "usd_price_24hr_percent_change": 4.672338122090493,
+      "usd_price_24hr_usd_change": 2.7671423361299996e-07,
+      "usd_value": 150.26790069335226,
+      "usd_value_24hr_usd_change": 6.7076216461040685,
       "native_token": false,
-      "portfolio_percentage": 0.013888841692397546
+      "portfolio_percentage": 0.014246932032724067
     },
     {
       "token_address": "0xca7af58da871736994ce360f51ec6cd28351a3df",
@@ -410,13 +410,13 @@
       "percentage_relative_to_total_supply": 0.002276527850354207,
       "security_score": 66,
       "balance_formatted": "2276.527850354207069055",
-      "usd_price": 0.04670871611315657,
-      "usd_price_24hr_percent_change": 0.5640765501316295,
-      "usd_price_24hr_usd_change": 0.00026199506175600407,
-      "usd_value": 106.33369308588925,
-      "usd_value_24hr_usd_change": 0.5964390547428137,
+      "usd_price": 0.04736325877212457,
+      "usd_price_24hr_percent_change": 1.9733098483092109,
+      "usd_price_24hr_usd_change": 0.0009165377207240033,
+      "usd_value": 107.8237776782748,
+      "usd_value_24hr_usd_change": 2.08652364712836,
       "native_token": false,
-      "portfolio_percentage": 0.01008284933079946
+      "portfolio_percentage": 0.010222795587120956
     },
     {
       "token_address": "0x6a7eff1e2c355ad6eb91bebb5ded49257f3fed98",
@@ -433,13 +433,13 @@
       "percentage_relative_to_total_supply": 0.008710415862338013,
       "security_score": 70,
       "balance_formatted": "8710.415862338013458842",
-      "usd_price": 0.002744302058934993,
-      "usd_price_24hr_percent_change": 1.2988707857071438,
-      "usd_price_24hr_usd_change": 3.5187892459799964e-05,
-      "usd_value": 23.904012185194233,
-      "usd_value_24hr_usd_change": 0.30650117664408577,
+      "usd_price": 0.002842613692466718,
+      "usd_price_24hr_percent_change": 4.9277925472293855,
+      "usd_price_24hr_usd_change": 0.00013349952599150039,
+      "usd_value": 24.760347397361333,
+      "usd_value_24hr_usd_change": 1.162836388810971,
       "native_token": false,
-      "portfolio_percentage": 0.0022666433025158596
+      "portfolio_percentage": 0.0023475338701690464
     },
     {
       "token_address": "0x59c6766de1dc50a9c9db86cb0461b5ce07408ab7",
@@ -456,13 +456,13 @@
       "percentage_relative_to_total_supply": 0.030202375662001502,
       "security_score": 83,
       "balance_formatted": "20839639206.78103709",
-      "usd_price": 1.128774895e-09,
+      "usd_price": 1.163668815e-09,
       "usd_price_24hr_percent_change": 0,
       "usd_price_24hr_usd_change": 0,
-      "usd_value": 23.523261557472146,
+      "usd_value": 24.250438260782428,
       "usd_value_24hr_usd_change": 0,
       "native_token": false,
-      "portfolio_percentage": 0.002230539494771421
+      "portfolio_percentage": 0.002299189275094617
     },
     {
       "token_address": "0x733fd1b5aa477d55070546922ba1bd3751c167c7",
@@ -485,7 +485,7 @@
       "usd_value": 22.740526053834042,
       "usd_value_24hr_usd_change": 0,
       "native_token": false,
-      "portfolio_percentage": 0.002156318390246483
+      "portfolio_percentage": 0.0021560341735159224
     },
     {
       "token_address": "0x582d872a1b094fc48f5de31d3b73f2d9be47def1",
@@ -502,13 +502,13 @@
       "percentage_relative_to_total_supply": 3.9742578353333333,
       "security_score": 95,
       "balance_formatted": "5.961386753",
-      "usd_price": 3.1629765637892713,
-      "usd_price_24hr_percent_change": -1.6576934895048732,
-      "usd_price_24hr_usd_change": -0.053316277025599934,
-      "usd_value": 18.855726587422822,
-      "usd_value_24hr_usd_change": -0.3178389475796897,
+      "usd_price": 3.1978457548667243,
+      "usd_price_24hr_percent_change": 3.4802635457409634,
+      "usd_price_24hr_usd_change": 0.1075504219279999,
+      "usd_value": 19.063595321199777,
+      "usd_value_24hr_usd_change": 0.6411496605611394,
       "native_token": false,
-      "portfolio_percentage": 0.0017879511628564246
+      "portfolio_percentage": 0.001807423578737099
     },
     {
       "token_address": "0x3b484b82567a09e2588a13d54d032153f0c0aee0",
@@ -525,13 +525,13 @@
       "percentage_relative_to_total_supply": 4.8858487298e-06,
       "security_score": 80,
       "balance_formatted": "4885848.7298",
-      "usd_price": 2.986890492e-09,
-      "usd_price_24hr_percent_change": -1.7124623844253537,
-      "usd_price_24hr_usd_change": -5.2040551000000075e-11,
-      "usd_value": 0.014593495116389897,
-      "usd_value_24hr_usd_change": -0.00025426226000144247,
+      "usd_price": 3.144126831e-09,
+      "usd_price_24hr_percent_change": 5.26421505646548,
+      "usd_price_24hr_usd_change": 1.5723633899999985e-10,
+      "usd_value": 0.015361728083571448,
+      "usd_value_24hr_usd_change": 0.0007682329671815514,
       "native_token": false,
-      "portfolio_percentage": 1.3837948085698857e-06
+      "portfolio_percentage": 1.4564487485484186e-06
     },
     {
       "token_address": "0x0750b4f59e9913f560681d54f7ce1cca65f94556",
