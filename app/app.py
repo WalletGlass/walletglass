@@ -300,9 +300,6 @@ c1.metric("Total Funded", format_usd(funded_usd))
 c2.metric("Current Value", format_usd(current_usd))
 c5.metric("Total Defunded", format_usd(defunded_usd))
 
-
-c1.metric("Total Funded", format_usd(pnl["funded_usd"]))
-c2.metric("Current Value", format_usd(pnl["current_value_usd"]))
 net = float(pnl["net_pnl_usd"])
 roi = float(pnl["roi_pct"])
 dc = roi_delta_color(roi)
