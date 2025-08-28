@@ -20,12 +20,15 @@ from mvp.pnl import compute_pnl
 from mvp.defunding import get_defunding
 # Page config FIRST
 
+# --- Config & Theme (must be first) ---
+favicon_path = Path(__file__).resolve().parent / "assets" / "favicon.ico"
 st.set_page_config(
     page_title="WalletGlass — ROI, not vibes.",
-    page_icon="💎",
+    page_icon=str(favicon_path) if favicon_path.exists() else "💎",
     layout="centered",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
+
 
 from mvp.secrets import get_secret
 
@@ -50,6 +53,14 @@ footer {visibility: hidden;}
 [data-testid="stToolbar"] {display: none;}
 /* Hide the hamburger MainMenu (we already removed items via menu_items) */
 #MainMenu {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+st.markdown("""
+<style>
+/* Reduce the top padding in the main app */
+.block-container {
+    padding-top: 1rem;   /* default is ~6rem; try 0 or 1rem */
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -190,15 +201,21 @@ def roi_delta_color(roi_pct: float) -> str:
     return "normal" if abs(roi_pct) >= 0.10 else "off"  # 0.10% = near-zero threshold
 
 # --- Header ---
-left, right = st.columns([1, 4])
+left, right = st.columns([1,1])
 with left:
-    logo_path = Path(__file__).with_name("assets") / "logo.png"
+    logo_path = Path(__file__).resolve().parent / "assets" / "logo.png"
     if logo_path.exists():
+        # Streamlit serves it safely, scales with width %
         st.image(str(logo_path), use_container_width=True)
-with right:
-    st.markdown("### 💎 WalletGlass")
-    st.caption("**Because vibes aren’t a trading strategy.**")
-
+        
+    else:
+        st.markdown("### 💎 WalletGlass")
+st.markdown(
+        "<div style='margin-center:-36px; font-size:1.5rem; color:#9aa0a6;'>"
+        "Because vibes aren’t a trading strategy."
+        "</div>",
+        unsafe_allow_html=True
+    )
 # --- Session / throttle setup ---
 if "last_switch_ts" not in st.session_state:
     st.session_state.last_switch_ts = None
