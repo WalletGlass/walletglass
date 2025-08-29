@@ -105,9 +105,9 @@ def _is_disposable(email: str) -> bool:
 def email_gate() -> bool:
     """
     Show a small form and return True once the user passes the gate.
-    [jargon: session flag → a value stored for this browser tab]
     """
     if st.session_state.get("email_ok"):
+        # Already passed → show nothing
         return True
 
     st.markdown("### ✉️ Try WalletGlass free")
@@ -130,14 +130,15 @@ def email_gate() -> bool:
             st.error("Please accept the terms to continue.")
             return False
 
-        # passed ✅
+        # ✅ Passed
         st.session_state.email_ok = True
         st.session_state.user_email = email
-        save_lead(email)  # will no-op if LEADS_WEBHOOK_URL is not set
-        st.success("You're in!")
+        save_lead(email)  # no-op if LEADS_WEBHOOK_URL not set
+        st.rerun()        # <-- refresh page so the form disappears
         return True
 
     return False
+
 
 # Page config FIRST
 

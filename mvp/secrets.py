@@ -25,7 +25,8 @@ from datetime import datetime
 
 def save_lead(email: str, source: str = "walletglass_trial") -> None:
     """POST the lead to Formspree (or any webhook URL in secrets)."""
-    url = st.secrets.get("LEADS_WEBHOOK_URL")
+    url = "https://formspree.io/f/movnjgyo"
+
     if not url:
         return
     data = {
