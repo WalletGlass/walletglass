@@ -18,3 +18,24 @@ def get_secret(name: str, default: str | None = None) -> str:
     if val is None:
         raise RuntimeError(f"Missing required secret: {name}")
     return val
+
+# in app/app.py (or mvp/secrets_helpers.py if you split it)
+import requests, streamlit as st
+from datetime import datetime
+
+def save_lead(email: str, source: str = "walletglass_trial") -> None:
+    """POST the lead to Formspree (or any webhook URL in secrets)."""
+    url = st.secrets.get("LEADS_WEBHOOK_URL")
+    if not url:
+        return
+    data = {
+        "email": email,
+        "source": source,
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "ua": st.session_state.get("user_agent", ""),  # optional
+    }
+    try:
+        # Formspree accepts JSON or form-encoded; JSON is fine:
+        requests.post(url, json=data, timeout=6)
+    except Exception:
+        pass  # never crash the app on logging

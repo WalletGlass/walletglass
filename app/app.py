@@ -18,6 +18,54 @@ from mvp.funding_v1 import get_funding
 from mvp.balances_moralis import get_portfolio
 from mvp.pnl import compute_pnl
 from mvp.defunding import get_defunding
+from mvp.secrets import get_secret, save_lead
+
+EMAIL_RE = re.compile(r"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", re.I)
+DISPOSABLE = {"mailinator.com", "10minutemail.com", "tempmail.com", "sharklasers.com"}  # tiny optional list
+
+def _is_disposable(email: str) -> bool:
+    try:
+        return email.split("@", 1)[1].lower() in DISPOSABLE
+    except Exception:
+        return True
+
+def email_gate() -> bool:
+    """
+    Show a small form and return True once the user passes the gate.
+    [jargon: session flag → a value stored for this browser tab]
+    """
+    if st.session_state.get("email_ok"):
+        return True
+
+    st.markdown("### ✉️ Try WalletGlass free")
+    st.write("Enter your email to unlock the demo. We’ll send occasional updates (no spam).")
+
+    with st.form("email_gate", clear_on_submit=False):
+        email = st.text_input("Email address", placeholder="you@example.com")
+        consent = st.checkbox("I agree to the Terms & Privacy", value=True)
+        submit = st.form_submit_button("Continue")
+
+    if submit:
+        email = (email or "").strip()
+        if not EMAIL_RE.match(email):
+            st.error("Please enter a valid email address.")
+            return False
+        if _is_disposable(email):
+            st.error("Please use a non-disposable email.")
+            return False
+        if not consent:
+            st.error("Please accept the terms to continue.")
+            return False
+
+        # passed ✅
+        st.session_state.email_ok = True
+        st.session_state.user_email = email
+        save_lead(email)  # will no-op if LEADS_WEBHOOK_URL is not set
+        st.success("You're in!")
+        return True
+
+    return False
+
 # Page config FIRST
 
 # --- Config & Theme (must be first) ---
@@ -28,9 +76,11 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed",
 )
+# --- Email gate must run before the pipeline/UI ---
+if not email_gate():
+    st.stop()
 
 
-from mvp.secrets import get_secret
 
 def _require_secrets():
     try:
