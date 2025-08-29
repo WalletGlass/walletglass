@@ -20,6 +20,79 @@ from mvp.pnl import compute_pnl
 from mvp.defunding import get_defunding
 from mvp.secrets import get_secret, save_lead
 
+# --- Email-based rate limit (persisted to disk) ---
+import hashlib
+
+RATE_DB_PATH = Path(__file__).resolve().parents[1] / "data" / "rate_limit.json"
+THROTTLE_MINUTES = 60  # (jargon: configurable constant) (plain: 1 hour per email for new addresses)
+
+def _email_key(email: str) -> str:
+    """Stable, privacy-friendly key for disk (hash of email).
+    (jargon: salted/hashed identifier) (plain: we don't store the raw email on disk)"""
+    e = (email or "").strip().lower()
+    return hashlib.sha256(e.encode("utf-8")).hexdigest()[:16]
+
+def _load_rate_db() -> dict:
+    try:
+        RATE_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        if RATE_DB_PATH.exists():
+            return json.loads(RATE_DB_PATH.read_text())
+        return {}
+    except Exception:
+        return {}
+
+def _save_rate_db(db: dict) -> None:
+    try:
+        tmp = RATE_DB_PATH.with_suffix(".tmp")
+        tmp.write_text(json.dumps(db, indent=2))
+        tmp.replace(RATE_DB_PATH)
+    except Exception:
+        pass
+
+def enforce_rate_limit(email: str, address: str) -> tuple[bool, str | None]:
+    """
+    Return (ok, retry_at_str). If ok=False, caller should stop and show retry time.
+    (jargon: gatekeeper) (plain: decides if this email can analyze a new address now)
+    """
+    if not email:
+        # if somehow we got here without the gate, be safe and allow
+        return True, None
+
+    db = _load_rate_db()
+    key = _email_key(email)
+    rec = db.get(key, {"last_addr": None, "last_ts": None})
+
+    # Is this a NEW address? (we only throttle new addresses; re-running same addr is fine)
+    is_new = (address or "").lower() != (rec.get("last_addr") or "").lower()
+
+    if not is_new:
+        return True, None  # same address → always ok
+
+    # If we’ve never seen this email, allow and record
+    now = datetime.utcnow()
+    if not rec.get("last_ts"):
+        rec = {"last_addr": address, "last_ts": now.isoformat()}
+        db[key] = rec
+        _save_rate_db(db)
+        return True, None
+
+    # If seen: check elapsed time
+    try:
+        last_ts = datetime.fromisoformat(rec["last_ts"])
+    except Exception:
+        last_ts = now
+
+    delta = now - last_ts
+    if delta < timedelta(minutes=THROTTLE_MINUTES):
+        retry_at = (last_ts + timedelta(minutes=THROTTLE_MINUTES)).strftime("%H:%M UTC")
+        return False, retry_at
+
+    # Passed window → allow and update
+    rec = {"last_addr": address, "last_ts": now.isoformat()}
+    db[key] = rec
+    _save_rate_db(db)
+    return True, None
+
 EMAIL_RE = re.compile(r"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$", re.I)
 DISPOSABLE = {"mailinator.com", "10minutemail.com", "tempmail.com", "sharklasers.com"}  # tiny optional list
 
@@ -80,6 +153,9 @@ st.set_page_config(
 if not email_gate():
     st.stop()
 
+with st.sidebar:
+    if st.session_state.get("user_email"):
+        st.caption(f"Signed in as **{st.session_state['user_email']}**")
 
 
 def _require_secrets():
@@ -117,16 +193,23 @@ st.markdown("""
 from urllib.parse import urlencode
 
 def use_dev_mode() -> bool:
-    """Developer Mode toggle with URL persistence (query param)."""
+    """Enable Developer Mode only if the logged-in email is allowed."""
+    # Add your email(s) here
+    allowed = {"tylerwares1@gmail.com","twares@hotmail.ca"}  
+
+    user_email = st.session_state.get("user_email")
+    if user_email not in allowed:
+        return False  # hide Dev Mode entirely for others
+
     qp = st.query_params
     default = qp.get("dev", ["0"])[0] in ("1", "true", "True")
     dev = st.sidebar.toggle("🛠️ Developer Mode", value=default, help="Show debug info & sanity panels")
-    # keep the URL in sync so refresh/bookmark preserves the setting
     if dev and not default:
         st.query_params.update({"dev": "1"})
     if (not dev) and default:
         st.query_params.update({"dev": "0"})
     return dev
+
 
 DEV = use_dev_mode()
 
@@ -138,6 +221,13 @@ if DEV:
     for p in sys.path[:5]:
         st.caption(f"• {p}")
     st.caption(f"mvp exists: {pathlib.Path(__file__).resolve().parents[1].joinpath('mvp').exists()}")
+if DEV and st.sidebar.button("Reset my rate limit"):
+    db = _load_rate_db()
+    key = _email_key(st.session_state.get("user_email",""))
+    if key in db:
+        db.pop(key, None)
+        _save_rate_db(db)
+        st.success("Rate limit reset for your email.")
 
 # ... (CSS load, helpers, etc.)
 
@@ -294,17 +384,19 @@ if not ADDR_RE.match(addr):
     st.stop()
 
 # Free-tier throttle (only if switching to a *new* address)
-is_new_address = addr.lower() != (st.session_state.active_address or "").lower()
+# --- Free-tier throttle (per-email; only when switching to a new address) ---
+user_email = st.session_state.get("user_email", "")
+ok, retry_at = enforce_rate_limit(user_email, addr)
+if not ok:
+    st.info(f"Free-tier rate limit (per email): try another address after {retry_at}.")
+    st.stop()
+
+# If allowed AND it is new, persist the UI's notion of "active address" as well
+is_new_address = addr.lower() != (st.session_state.get("active_address") or "").lower()
 if is_new_address:
-    now = datetime.utcnow()
-    if st.session_state.last_switch_ts and now - st.session_state.last_switch_ts < timedelta(minutes=THROTTLE_MINUTES):
-        retry_at = st.session_state.last_switch_ts + timedelta(minutes=THROTTLE_MINUTES)
-        st.info(f"Free-tier rate limit: try another address after {retry_at.strftime('%H:%M UTC')}.")
-        st.stop()
-    # allow switch
-    st.session_state.last_switch_ts = now
     st.session_state.active_address = addr
-    save_last_address(addr)
+    save_last_address(addr)  # your existing helper
+
 
 # --- Pipeline status ---
 with st.status("Running analysis…", expanded=False) as status:
